@@ -7,6 +7,7 @@ import { HollandType } from "./data/riasecDescriptions";
 import QuestionCard from "./components/QuestionCard";
 import Result from "./components/Result";
 import MainBrandLogo from "./components/MainBrandLogo";
+import Pagination from "./components/Pagination";
 
 type Scores = Record<HollandType, number>;
 
@@ -14,6 +15,8 @@ export default function App() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [answers, setAnswers] = useState<Record<number, number | null>>({});
   const [result, setResult] = useState<Scores | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const questionsPerPage = 10;
 
   useEffect(() => {
     const shuffled = resetTest();
@@ -44,11 +47,29 @@ export default function App() {
     shuffled.forEach((q) => (resetAnswers[q.id] = null));
     setAnswers(resetAnswers);
     setResult(null);
+    setCurrentPage(1);
     localStorage.removeItem("holland_scores");
   };
 
   const totalAnswered = Object.values(answers).filter((v) => v !== null).length;
   const allAnswered = totalAnswered === questions.length;
+
+  // Calculate pagination
+  const indexOfLastQuestion = currentPage * questionsPerPage;
+  const indexOfFirstQuestion = indexOfLastQuestion - questionsPerPage;
+  const currentQuestions = questions.slice(
+    indexOfFirstQuestion,
+    indexOfLastQuestion
+  );
+  const totalPages = Math.ceil(questions.length / questionsPerPage);
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
 
   return (
     <Container className="my-5">
@@ -84,14 +105,21 @@ export default function App() {
               className="mb-4"
               variant="info"
             />
-            {questions.map((q) => (
+            {currentQuestions.map((q) => (
               <QuestionCard
                 key={q.id}
                 question={q}
                 value={answers[q.id] || 3}
                 onChange={(val) => handleChange(q.id, val)}
+                isAnswered={answers[q.id] !== null} // Pass isAnswered prop
               />
             ))}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPrevious={handlePreviousPage}
+              onNext={handleNextPage}
+            />
             <div className="d-flex gap-3 mt-4">
               <Button
                 variant="primary"
