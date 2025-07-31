@@ -109,9 +109,9 @@ export default function App() {
               <QuestionCard
                 key={q.id}
                 question={q}
-                value={answers[q.id] || 3}
+                value={answers[q.id]}
                 onChange={(val) => handleChange(q.id, val)}
-                isAnswered={answers[q.id] !== null} // Pass isAnswered prop
+                isAnswered={answers[q.id] !== null}
               />
             ))}
             <Pagination

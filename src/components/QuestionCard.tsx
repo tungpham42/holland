@@ -5,9 +5,9 @@ import { Question } from "../data/questions";
 
 interface Props {
   question: Question;
-  value?: number;
+  value: number | null;
   onChange: (value: number) => void;
-  isAnswered: boolean; // New prop to indicate if the question is answered
+  isAnswered: boolean;
 }
 
 export default function QuestionCard({
@@ -51,15 +51,28 @@ export default function QuestionCard({
             />
           )}
         </Card.Title>
-        <Form.Range
-          min={1}
-          max={5}
-          value={value || 3}
-          onChange={(e) => onChange(Number(e.target.value))}
-          className="my-3"
-        />
+        <Form.Group className="my-3">
+          <div className="d-flex justify-content-between">
+            {[1, 2, 3, 4, 5].map((rating) => (
+              <Form.Check
+                key={rating}
+                type="radio"
+                name={`question-${question.displayOrder}`}
+                id={`rating-${question.displayOrder}-${rating}`}
+                label={rating}
+                value={rating}
+                checked={value === rating}
+                onChange={(e) => onChange(Number(e.target.value))}
+                className="text-center"
+                style={{
+                  cursor: "pointer",
+                }}
+              />
+            ))}
+          </div>
+        </Form.Group>
         <div className="text-muted">
-          Mức độ thích: <strong>{value || 3}</strong> / 5
+          Mức độ thích: <strong>{value ?? "Chưa chọn"}</strong> / 5 điểm
         </div>
       </Card.Body>
     </Card>
