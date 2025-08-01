@@ -20,7 +20,10 @@ export default function Pagination({
     <div className="d-flex justify-content-between align-items-center mt-4">
       <Button
         variant="outline-secondary"
-        onClick={onPrevious}
+        onClick={() => {
+          onPrevious();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
         disabled={currentPage === 1}
       >
         <FontAwesomeIcon icon={faArrowLeft} className="me-2" />
@@ -31,7 +34,10 @@ export default function Pagination({
       </span>
       <Button
         variant="outline-secondary"
-        onClick={onNext}
+        onClick={() => {
+          onNext();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
         disabled={currentPage === totalPages}
       >
         Trang sau
