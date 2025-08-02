@@ -16,13 +16,19 @@ export default function Pagination({
   onPrevious,
   onNext,
 }: Props) {
+  const scrollToTop = () => {
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, 100); // Add 100ms delay to ensure DOM updates are complete
+  };
+
   return (
     <div className="d-flex justify-content-between align-items-center mt-4">
       <Button
         variant="outline-secondary"
         onClick={() => {
           onPrevious();
-          window.scrollTo({ top: 0, behavior: "smooth" });
+          scrollToTop();
         }}
         disabled={currentPage === 1}
       >
@@ -36,7 +42,7 @@ export default function Pagination({
         variant="outline-secondary"
         onClick={() => {
           onNext();
-          window.scrollTo({ top: 0, behavior: "smooth" });
+          scrollToTop();
         }}
         disabled={currentPage === totalPages}
       >
