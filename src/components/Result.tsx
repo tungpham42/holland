@@ -39,13 +39,22 @@ export default function Result({ scores }: Props) {
               {desc.name} ({key}): {score}
             </h5>
             <div className="text-muted" style={{ fontSize: "0.9em" }}>
-              {desc.description}
+              <p>{desc.description}</p>
+              <p className="mt-2">
+                <strong>Nhận định:</strong> {desc.insights}
+              </p>
+              <p className="mt-2 mb-1">
+                <strong>Ưu điểm:</strong> {desc.advantages}
+              </p>
+              <p className="mt-2 mb-1">
+                <strong>Hạn chế:</strong> {desc.disadvantages}
+              </p>
             </div>
           </Card>
         );
       })}
       <Card className="p-3 mb-4">
-        <p className="mb-0">
+        <p className="mb-2">
           Mã Holland của bạn:{" "}
           <strong className="text-primary">
             {sorted
@@ -54,6 +63,17 @@ export default function Result({ scores }: Props) {
               .join("")}
           </strong>
         </p>
+        <p className="mb-1">Các công việc phù hợp:</p>
+        <ul>
+          {sorted
+            .slice(0, 3)
+            .flatMap(([key]) =>
+              riasecDescriptions[key as HollandType].jobs.slice(0, 3)
+            )
+            .map((job, index) => (
+              <li key={index}>{job}</li>
+            ))}
+        </ul>
       </Card>
       <ResponsiveContainer width="100%" height={350}>
         <BarChart
